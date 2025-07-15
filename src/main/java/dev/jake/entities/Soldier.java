@@ -2,6 +2,7 @@ package dev.jake.entities;
 
 import dev.jake.util.DetailType;
 import dev.jake.util.Rank;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -10,16 +11,13 @@ import java.util.List;
 import java.util.Map;
 
 public class Soldier {
+    private final List<DutyAssignment> upcomingDuties;
+    private final Map<DetailType, Integer> detailTracker;
     private String name;
     private Rank rank;
-
     private LocalDate leaveStartDate;
     private LocalDate leaveEndDate;
     private int daysOfApprovedAbsences;
-
-    private final List<DutyAssignment> upcomingDuties;
-
-    private final Map<DetailType, Integer> detailTracker;
 
 
     public Soldier(String name, Rank rank) {
@@ -31,6 +29,11 @@ public class Soldier {
         this.detailTracker = new HashMap<>();
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s %s", rank, name);
+    }
+
     public boolean isAvailable(LocalDate detailDate) {
         // check Soldier's leave days
         if ((leaveStartDate != null && !detailDate.isBefore(leaveStartDate)) &&
@@ -38,9 +41,12 @@ public class Soldier {
             return false;
         }
 
-        // check if they're already scheduled for something else
+        // check if they're already scheduled for something else on that day and also day before or day after
         for (DutyAssignment detail : upcomingDuties) {
-            if (detail.getDate().equals(detailDate)) {
+            LocalDate dateOfExistingDuty = detail.getDate();
+            if (dateOfExistingDuty.equals(detailDate) |
+                    dateOfExistingDuty.equals(detailDate.minusDays(1)) |
+                    dateOfExistingDuty.equals(detailDate.plusDays(1))) {
                 return false;
             }
         }
@@ -62,7 +68,7 @@ public class Soldier {
 
         if (count <= 0) {
             detailTracker.remove(type);
-        }  else {
+        } else {
             detailTracker.put(type, count);
         }
 
@@ -80,14 +86,6 @@ public class Soldier {
     public void clearLeaveDays() {
         this.leaveStartDate = null;
         this.leaveEndDate = null;
-    }
-
-    public void setLeaveStartDate(LocalDate leaveStartDate) {
-        this.leaveStartDate = leaveStartDate;
-    }
-
-    public void setLeaveEndDate(LocalDate leaveEndDate) {
-        this.leaveEndDate = leaveEndDate;
     }
 
     public int getDaysOfApprovedAbsences() {
@@ -118,8 +116,16 @@ public class Soldier {
         return leaveStartDate;
     }
 
+    public void setLeaveStartDate(LocalDate leaveStartDate) {
+        this.leaveStartDate = leaveStartDate;
+    }
+
     public LocalDate getLeaveEndDate() {
         return leaveEndDate;
+    }
+
+    public void setLeaveEndDate(LocalDate leaveEndDate) {
+        this.leaveEndDate = leaveEndDate;
     }
 
     public List<DutyAssignment> getUpcomingDuties() {

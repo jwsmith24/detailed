@@ -3,16 +3,15 @@ package dev.jake.entities;
 import dev.jake.util.DetailType;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 /**
  * The DutyAssignment object represents a given duty that will need to be filled via polling the roster.
- *
  */
 public class DutyAssignment {
-    private final String id;
-    private Soldier soldier;
+    private static int counter = 1;
+    private final int id;
     private final DetailType detailType;
+    private Soldier soldier;
     private LocalDate date;
     private String location;
 
@@ -20,7 +19,7 @@ public class DutyAssignment {
         this.soldier = null; // initially not filled
         this.date = date;
         this.detailType = detailType;
-        this.id = UUID.randomUUID().toString();
+        this.id = counter++;
     }
 
 
@@ -28,6 +27,10 @@ public class DutyAssignment {
     public String toString() {
         String s = soldier == null ? "TBD" : soldier.toString();
         return String.format("%s on %s filled by %s | id: %s", detailType.toString(), date, s, id);
+    }
+
+    public int getId() {
+        return id;
     }
 
     public void assignSoldierToDuty(Soldier soldier) {
@@ -43,14 +46,13 @@ public class DutyAssignment {
         return date;
     }
 
-    public DetailType getDetailType() {
-        return detailType;
-    }
-
     public void setDate(LocalDate date) {
         this.date = date;
     }
 
+    public DetailType getDetailType() {
+        return detailType;
+    }
 
     public String getLocation() {
         return location;

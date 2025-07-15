@@ -4,7 +4,9 @@ import dev.jake.util.DetailType;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A detail object represents a DA Form 6 for a specific duty with the exception that it is a
@@ -12,41 +14,40 @@ import java.util.List;
  * carry over Soldier data. Incoming and outgoing Soldiers can simply be added or removed from
  * the roster by the detail manager.
  *
- *  <p>
- *     A DutyRoster object contains a list of roster entries which consist of a Soldier's metadata plus their last
- *  time pulling that specific duty.
+ * <p>
+ * A DutyRoster object contains a list of roster entries which consist of a Soldier's metadata plus their last
+ * time pulling that specific duty.
  * </p>
- *
  */
 public class DutyRoster {
     private final DetailType type;
-    private String description; // include relevant info such as location, important POCs
-
     // tracks each soldier eligible to pull the specific duty (cq, sd, etc.)
     private final List<SoldierRosterEntry> rosterEntries;
     // tracks duties that need to be filled
-    // todo: change to map <id, dutyAssignment> so that we can easily assign soldiers
-    private final List<DutyAssignment> dutyAssignments;
+    private final Map<Integer, DutyAssignment> dutyAssignments;
+    private String description; // include relevant info such as location, important POCs
 
-    public DutyRoster(DetailType type){
+    public DutyRoster(DetailType type) {
         this.type = type;
         this.rosterEntries = new ArrayList<>();
-        this.dutyAssignments = new ArrayList<>();
+        this.dutyAssignments = new HashMap<>();
     }
 
     public void addDuty(LocalDate date) {
         DutyAssignment newDuty = new DutyAssignment(date, type);
-        this.dutyAssignments.add(newDuty);
+        this.dutyAssignments.put(newDuty.getId(), newDuty);
 
     }
 
 
-
-
-
-    public List<DutyAssignment> getDutyAssignments() {
+    public Map<Integer, DutyAssignment> getDutyAssignments() {
         return dutyAssignments;
     }
+
+    public DutyAssignment getDutyAssignment(int id) {
+        return dutyAssignments.get(id);
+    }
+
     public DetailType getType() {
         return type;
     }
