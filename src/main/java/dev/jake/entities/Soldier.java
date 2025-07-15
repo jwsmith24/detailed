@@ -1,9 +1,13 @@
 package dev.jake.entities;
 
+import dev.jake.util.DetailType;
 import dev.jake.util.Rank;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Soldier {
     private String name;
@@ -11,8 +15,11 @@ public class Soldier {
 
     private LocalDate leaveStartDate;
     private LocalDate leaveEndDate;
+    private int daysOfApprovedAbsences;
 
     private final List<DetailAssignment> upcomingDuties;
+
+    private final Map<DetailType, Integer> detailTracker;
 
 
     public Soldier(String name, Rank rank) {
@@ -21,6 +28,7 @@ public class Soldier {
         this.leaveStartDate = null;
         this.leaveEndDate = null;
         this.upcomingDuties = new ArrayList<>();
+        this.detailTracker = new HashMap<>();
     }
 
     public boolean isAvailable(LocalDate detailDate) {
@@ -42,24 +50,53 @@ public class Soldier {
 
     public void addAssignment(DetailAssignment detail) {
         upcomingDuties.add(detail);
+        detailTracker.put(detail.getType(), detailTracker.getOrDefault(detail.getType(), 0) + 1);
     }
 
     public void removeAssignment(DetailAssignment detail) {
         upcomingDuties.remove(detail);
+
+        // update duty count
+        DetailType type = detail.getType();
+        int count = detailTracker.getOrDefault(type, 0) - 1;
+
+        if (count <= 0) {
+            detailTracker.remove(type);
+        }  else {
+            detailTracker.put(type, count);
+        }
+
+
     }
 
-    public void setLeaveStartDate(LocalDate leaveStartDate) {
+
+    public void setLeaveDays(LocalDate leaveStartDate, LocalDate leaveEndDate) {
         this.leaveStartDate = leaveStartDate;
-    }
-    public void setLeaveEndDate(LocalDate leaveEndDate) {
         this.leaveEndDate = leaveEndDate;
+        this.daysOfApprovedAbsences = (int) ChronoUnit.DAYS.between(leaveStartDate, leaveEndDate);
     }
+
 
     public void clearLeaveDays() {
         this.leaveStartDate = null;
         this.leaveEndDate = null;
     }
 
+    public void setLeaveStartDate(LocalDate leaveStartDate) {
+        this.leaveStartDate = leaveStartDate;
+    }
+
+    public void setLeaveEndDate(LocalDate leaveEndDate) {
+        this.leaveEndDate = leaveEndDate;
+    }
+
+    public int getDaysOfApprovedAbsences() {
+        return daysOfApprovedAbsences;
+    }
+
+    public void setDaysOfApprovedAbsences(int daysOfApprovedAbsences) {
+        this.daysOfApprovedAbsences = daysOfApprovedAbsences;
+    }
 
     public String getName() {
         return name;

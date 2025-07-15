@@ -7,21 +7,22 @@ public class RosterEntry {
     Soldier soldier;
     LocalDate lastWeekdayDuty;
     LocalDate lastWeekendOrHolidayDuty;
-    int dutyCount;
 
     public int getDaysSinceLastWeekdayDuty() {
         if (lastWeekdayDuty == null) return Integer.MAX_VALUE;
 
-        LocalDate adjustedDays = lastWeekdayDuty.plusDays(daysOfApprovedAbsence);
+        LocalDate adjustedDays = lastWeekdayDuty.plusDays(soldier.getDaysOfApprovedAbsences());
         return (int) ChronoUnit.DAYS.between(adjustedDays, LocalDate.now());
 
     }
 
     public int getDaysSinceLastWeekendOrHolidayDuty() {
         if (lastWeekendOrHolidayDuty == null) return Integer.MAX_VALUE;
-        LocalDate adjustedDate = lastWeekendOrHolidayDuty.plusDays(daysOfApprovedAbsence);
+        LocalDate adjustedDate = lastWeekendOrHolidayDuty.plusDays(soldier.getDaysOfApprovedAbsences());
         return (int) ChronoUnit.DAYS.between(adjustedDate, LocalDate.now());
     }
+
+
 }
 
 
