@@ -3,10 +3,11 @@ package dev.jake.entities;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-public class RosterEntry {
-    Soldier soldier;
-    LocalDate lastWeekdayDuty;
-    LocalDate lastWeekendOrHolidayDuty;
+public class SoldierRosterEntry {
+    private Soldier soldier;
+    private LocalDate lastWeekdayDuty;
+    private LocalDate lastWeekendOrHolidayDuty;
+
 
     public int getDaysSinceLastWeekdayDuty() {
         if (lastWeekdayDuty == null) return Integer.MAX_VALUE;

@@ -50,14 +50,14 @@ public class Soldier {
 
     public void addAssignment(DutyAssignment detail) {
         upcomingDuties.add(detail);
-        detailTracker.put(detail.getType(), detailTracker.getOrDefault(detail.getType(), 0) + 1);
+        detailTracker.put(detail.getDetailType(), detailTracker.getOrDefault(detail.getDetailType(), 0) + 1);
     }
 
     public void removeAssignment(DutyAssignment detail) {
         upcomingDuties.remove(detail);
 
         // update duty count
-        DetailType type = detail.getType();
+        DetailType type = detail.getDetailType();
         int count = detailTracker.getOrDefault(type, 0) - 1;
 
         if (count <= 0) {
