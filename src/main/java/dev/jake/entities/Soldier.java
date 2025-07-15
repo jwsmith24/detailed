@@ -2,32 +2,62 @@ package dev.jake.entities;
 
 import dev.jake.util.Rank;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Soldier {
     private String name;
     private Rank rank;
-    private LocalDate lastWeekdayDuty;
-    private LocalDate lastWeekendOrHolidayDuty;
-    private int daysOfApprovedAbsence;
+
+    private LocalDate leaveStartDate;
+    private LocalDate leaveEndDate;
+
+    private final List<DetailAssignment> upcomingDuties;
+
 
     public Soldier(String name, Rank rank) {
         this.name = name;
         this.rank = rank;
+        this.leaveStartDate = null;
+        this.leaveEndDate = null;
+        this.upcomingDuties = new ArrayList<>();
     }
 
-    public int getDaysSinceLastWeekdayDuty() {
-        if (lastWeekdayDuty == null) return Integer.MAX_VALUE;
+    public boolean isAvailable(LocalDate detailDate) {
+        // check Soldier's leave days
+        if ((leaveStartDate != null && !detailDate.isBefore(leaveStartDate)) &&
+                (leaveEndDate != null && !detailDate.isAfter(leaveEndDate))) {
+            return false;
+        }
 
-        LocalDate adjustedDays = lastWeekdayDuty.plusDays(daysOfApprovedAbsence);
-        return (int) ChronoUnit.DAYS.between(adjustedDays, LocalDate.now());
+        // check if they're already scheduled for something else
+        for (DetailAssignment detail : upcomingDuties) {
+            if (detail.getDate().equals(detailDate)) {
+                return false;
+            }
+        }
 
+        return true;
     }
 
-    public int getDaysSinceLastWeekendOrHolidayDuty() {
-        if (lastWeekendOrHolidayDuty == null) return Integer.MAX_VALUE;
-        LocalDate adjustedDate = lastWeekendOrHolidayDuty.plusDays(daysOfApprovedAbsence);
-        return (int) ChronoUnit.DAYS.between(adjustedDate, LocalDate.now());
+    public void addAssignment(DetailAssignment detail) {
+        upcomingDuties.add(detail);
+    }
+
+    public void removeAssignment(DetailAssignment detail) {
+        upcomingDuties.remove(detail);
+    }
+
+    public void setLeaveStartDate(LocalDate leaveStartDate) {
+        this.leaveStartDate = leaveStartDate;
+    }
+    public void setLeaveEndDate(LocalDate leaveEndDate) {
+        this.leaveEndDate = leaveEndDate;
+    }
+
+    public void clearLeaveDays() {
+        this.leaveStartDate = null;
+        this.leaveEndDate = null;
     }
 
 
@@ -47,27 +77,15 @@ public class Soldier {
         this.rank = rank;
     }
 
-    public void setDaysOfApprovedAbsence(int daysOfApprovedAbsence) {
-        this.daysOfApprovedAbsence = daysOfApprovedAbsence;
+    public LocalDate getLeaveStartDate() {
+        return leaveStartDate;
     }
 
-    public LocalDate getLastWeekdayDuty() {
-        return lastWeekdayDuty;
+    public LocalDate getLeaveEndDate() {
+        return leaveEndDate;
     }
 
-    public void setLastWeekdayDuty(LocalDate lastWeekdayDuty) {
-        this.lastWeekdayDuty = lastWeekdayDuty;
-    }
-
-    public LocalDate getLastWeekendOrHolidayDuty() {
-        return lastWeekendOrHolidayDuty;
-    }
-
-    public void setLastWeekendOrHolidayDuty(LocalDate lastWeekendOrHolidayDuty) {
-        this.lastWeekendOrHolidayDuty = lastWeekendOrHolidayDuty;
-    }
-
-    public int getDaysOfApprovedAbsence() {
-        return daysOfApprovedAbsence;
+    public List<DetailAssignment> getUpcomingDuties() {
+        return upcomingDuties;
     }
 }
