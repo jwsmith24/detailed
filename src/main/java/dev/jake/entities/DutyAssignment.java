@@ -4,7 +4,7 @@ import dev.jake.util.DetailType;
 
 import java.time.LocalDate;
 
-public class DetailAssignment {
+public class DutyAssignment {
     private LocalDate date;
     private DetailType type;
     private String location;

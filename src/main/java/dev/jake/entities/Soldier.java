@@ -17,7 +17,7 @@ public class Soldier {
     private LocalDate leaveEndDate;
     private int daysOfApprovedAbsences;
 
-    private final List<DetailAssignment> upcomingDuties;
+    private final List<DutyAssignment> upcomingDuties;
 
     private final Map<DetailType, Integer> detailTracker;
 
@@ -39,7 +39,7 @@ public class Soldier {
         }
 
         // check if they're already scheduled for something else
-        for (DetailAssignment detail : upcomingDuties) {
+        for (DutyAssignment detail : upcomingDuties) {
             if (detail.getDate().equals(detailDate)) {
                 return false;
             }
@@ -48,12 +48,12 @@ public class Soldier {
         return true;
     }
 
-    public void addAssignment(DetailAssignment detail) {
+    public void addAssignment(DutyAssignment detail) {
         upcomingDuties.add(detail);
         detailTracker.put(detail.getType(), detailTracker.getOrDefault(detail.getType(), 0) + 1);
     }
 
-    public void removeAssignment(DetailAssignment detail) {
+    public void removeAssignment(DutyAssignment detail) {
         upcomingDuties.remove(detail);
 
         // update duty count
@@ -122,7 +122,7 @@ public class Soldier {
         return leaveEndDate;
     }
 
-    public List<DetailAssignment> getUpcomingDuties() {
+    public List<DutyAssignment> getUpcomingDuties() {
         return upcomingDuties;
     }
 }

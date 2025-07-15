@@ -10,12 +10,12 @@ import java.util.List;
  * carry over Soldier data. Incoming and outgoing Soldiers can simply be added or removed from
  * the roster by the detail manager.
  */
-public class DetailRoster {
+public class DutyRoster {
     private final DetailType type;
     private String description; // include relevant info such as location, important POCs
     private final List<RosterEntry> rosterEntries;
 
-    public DetailRoster(DetailType type){
+    public DutyRoster(DetailType type){
         this.type = type;
         this.rosterEntries = new ArrayList<>();
     }
