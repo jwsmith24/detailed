@@ -1,15 +1,11 @@
 package dev.jake.entities;
 
-import dev.jake.util.DetailType;
 import dev.jake.util.Rank;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Entity
 public class Soldier {
@@ -28,7 +24,7 @@ public class Soldier {
     private int daysOfApprovedAbsences;
 
     @OneToMany(mappedBy = "soldier", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<DutyAssignment> upcomingDuties = new ArrayList<>();
+    private final List<DutyAssignment> assignedDuties = new ArrayList<>();
 
     public Soldier() {} // you're welcome jpa
 
@@ -61,8 +57,8 @@ public class Soldier {
         this.rank = rank;
     }
 
-    public List<DutyAssignment> getUpcomingDuties() {
-        return upcomingDuties;
+    public List<DutyAssignment> getAssignedDuties() {
+        return assignedDuties;
     }
 
     public LocalDate getLeaveStartDate() {

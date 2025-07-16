@@ -1,6 +1,7 @@
 package dev.jake.entities;
 
 import dev.jake.util.DetailType;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,48 +20,32 @@ import java.util.Map;
  * time pulling that specific duty.
  * </p>
  */
+
+@Entity
 public class DutyRoster {
-    private final DetailType type;
-    // tracks each soldier eligible to pull the specific duty (cq, sd, etc.)
-    private final List<SoldierRosterEntry> rosterEntries;
-    // tracks duties that need to be filled
-    private final Map<Long, DutyAssignment> dutyAssignments;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String description; // include relevant info such as location, important POCs
+
+    @Enumerated(EnumType.STRING)
+    private DetailType type;
+
+    // tracks each soldier eligible to pull the specific duty (cq, sd, etc.)
+    @OneToMany
+    private List<SoldierRosterEntry> rosterEntries;
+
+
 
     public DutyRoster(DetailType type) {
         this.type = type;
         this.rosterEntries = new ArrayList<>();
-        this.dutyAssignments = new HashMap<>();
     }
 
-    public void addDuty(LocalDate date) {
-        DutyAssignment newDuty = new DutyAssignment(date, type);
-        this.dutyAssignments.put(newDuty.getId(), newDuty);
-
-    }
+    public DutyRoster(){}
 
 
-    public Map<Long, DutyAssignment> getDutyAssignments() {
-        return dutyAssignments;
-    }
 
-    public DutyAssignment getDutyAssignment(long id) {
-        return dutyAssignments.get(id);
-    }
-
-    public DetailType getType() {
-        return type;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<SoldierRosterEntry> getRoster() {
-        return rosterEntries;
-    }
 }

@@ -40,7 +40,7 @@ public class SoldierService {
             return false;
         }
 
-        for (DutyAssignment assignment : soldier.getUpcomingDuties()) {
+        for (DutyAssignment assignment : soldier.getAssignedDuties()) {
             LocalDate existingDate = assignment.getDate();
             if (existingDate.equals(date) ||
                     existingDate.equals(date.minusDays(1)) ||
@@ -53,7 +53,7 @@ public class SoldierService {
     }
 
     public void assignDuty(Soldier soldier, DutyAssignment assignment) {
-        soldier.getUpcomingDuties().add(assignment);
+        soldier.getAssignedDuties().add(assignment);
         detailTrackers
                 .computeIfAbsent(soldier.getId(), id -> new HashMap<>())
                 .merge(assignment.getDetailType(), 1, Integer::sum);
@@ -62,7 +62,7 @@ public class SoldierService {
     }
 
     public void removeDuty(Soldier soldier, DutyAssignment assignment) {
-        if (!soldier.getUpcomingDuties().remove(assignment)) {
+        if (!soldier.getAssignedDuties().remove(assignment)) {
             System.out.println("Could not remove assignment");
             return;
         }

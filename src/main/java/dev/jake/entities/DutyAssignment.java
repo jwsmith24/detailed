@@ -7,6 +7,8 @@ import java.time.LocalDate;
 
 /**
  * The DutyAssignment object represents a given duty that will need to be filled via polling the roster.
+ *
+ * It captures all the necessary information about the specific duty and will be tracked
  */
 @Entity
 public class DutyAssignment {

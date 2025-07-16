@@ -1,29 +1,46 @@
 package dev.jake.entities;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
+/**
+ * A roster entry object represents a Soldier on a unique DA6.
+ */
+@Entity
 public class SoldierRosterEntry {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     private Soldier soldier;
+
     private LocalDate lastWeekdayDuty;
     private LocalDate lastWeekendOrHolidayDuty;
 
 
-    public int getDaysSinceLastWeekdayDuty() {
-        if (lastWeekdayDuty == null) return Integer.MAX_VALUE;
-
-        LocalDate adjustedDays = lastWeekdayDuty.plusDays(soldier.getDaysOfApprovedAbsences());
-        return (int) ChronoUnit.DAYS.between(adjustedDays, LocalDate.now());
-
+    public Long getId() {
+        return id;
     }
 
-    public int getDaysSinceLastWeekendOrHolidayDuty() {
-        if (lastWeekendOrHolidayDuty == null) return Integer.MAX_VALUE;
-        LocalDate adjustedDate = lastWeekendOrHolidayDuty.plusDays(soldier.getDaysOfApprovedAbsences());
-        return (int) ChronoUnit.DAYS.between(adjustedDate, LocalDate.now());
+    public Soldier getSoldier() {
+        return soldier;
     }
 
+    public LocalDate getLastWeekdayDuty() {
+        return lastWeekdayDuty;
+    }
 
+    public LocalDate getLastWeekendOrHolidayDuty() {
+        return lastWeekendOrHolidayDuty;
+    }
+
+    protected SoldierRosterEntry() {}
+
+    //todo toString, equals, override
 }
 
 
