@@ -24,7 +24,7 @@ public class DutyRoster {
     // tracks each soldier eligible to pull the specific duty (cq, sd, etc.)
     private final List<SoldierRosterEntry> rosterEntries;
     // tracks duties that need to be filled
-    private final Map<Integer, DutyAssignment> dutyAssignments;
+    private final Map<Long, DutyAssignment> dutyAssignments;
     private String description; // include relevant info such as location, important POCs
 
     public DutyRoster(DetailType type) {
@@ -40,11 +40,11 @@ public class DutyRoster {
     }
 
 
-    public Map<Integer, DutyAssignment> getDutyAssignments() {
+    public Map<Long, DutyAssignment> getDutyAssignments() {
         return dutyAssignments;
     }
 
-    public DutyAssignment getDutyAssignment(int id) {
+    public DutyAssignment getDutyAssignment(long id) {
         return dutyAssignments.get(id);
     }
 
