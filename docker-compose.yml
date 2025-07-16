@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres
+    container_name: detailed_postgres
+    environment:
+      POSTGRES_DB: detailed_db
+      POSTGRES_USER: detailed_user
+      POSTGRES_PASSWORD: detailed_pass
+
+    ports:
+      - "5434:5432"
+    restart: unless-stopped
+
+
+volumes:
+  postgresql_data:
+    driver: local
