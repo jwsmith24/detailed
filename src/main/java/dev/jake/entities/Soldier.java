@@ -41,11 +41,11 @@ public class Soldier {
             return false;
         }
 
-        // check if they're already scheduled for something else on that day and also day before or day after
+        // check if they're already scheduled for something else on that day, the day before or the day after
         for (DutyAssignment detail : upcomingDuties) {
             LocalDate dateOfExistingDuty = detail.getDate();
-            if (dateOfExistingDuty.equals(detailDate) |
-                    dateOfExistingDuty.equals(detailDate.minusDays(1)) |
+            if (dateOfExistingDuty.equals(detailDate) ||
+                    dateOfExistingDuty.equals(detailDate.minusDays(1)) ||
                     dateOfExistingDuty.equals(detailDate.plusDays(1))) {
                 return false;
             }
@@ -57,10 +57,15 @@ public class Soldier {
     public void addAssignment(DutyAssignment detail) {
         upcomingDuties.add(detail);
         detailTracker.put(detail.getDetailType(), detailTracker.getOrDefault(detail.getDetailType(), 0) + 1);
+        System.out.printf("%s assigned to %s on %s\n", detail.getDetailType(), this, detail.getDate());
     }
 
     public void removeAssignment(DutyAssignment detail) {
-        upcomingDuties.remove(detail);
+
+        if (!upcomingDuties.remove(detail)) {
+            System.out.println("could not remove assignment");
+            return; // detail wasn't found in the list
+        }
 
         // update duty count
         DetailType type = detail.getDetailType();
@@ -77,9 +82,14 @@ public class Soldier {
 
 
     public void setLeaveDays(LocalDate leaveStartDate, LocalDate leaveEndDate) {
+        if (leaveStartDate == null || leaveEndDate == null || leaveStartDate.isAfter(leaveEndDate)) {
+            throw new IllegalArgumentException("invalid leave dates");
+        }
+
         this.leaveStartDate = leaveStartDate;
         this.leaveEndDate = leaveEndDate;
-        this.daysOfApprovedAbsences = (int) ChronoUnit.DAYS.between(leaveStartDate, leaveEndDate);
+        this.daysOfApprovedAbsences = (int) ChronoUnit.DAYS.between(leaveStartDate, leaveEndDate) + 1; //include the end date
+
     }
 
 
@@ -116,19 +126,15 @@ public class Soldier {
         return leaveStartDate;
     }
 
-    public void setLeaveStartDate(LocalDate leaveStartDate) {
-        this.leaveStartDate = leaveStartDate;
-    }
-
     public LocalDate getLeaveEndDate() {
         return leaveEndDate;
     }
 
-    public void setLeaveEndDate(LocalDate leaveEndDate) {
-        this.leaveEndDate = leaveEndDate;
-    }
-
     public List<DutyAssignment> getUpcomingDuties() {
         return upcomingDuties;
+    }
+
+    public Map<DetailType, Integer> getDetailTracker() {
+        return Map.copyOf(detailTracker); // keep it read only
     }
 }
