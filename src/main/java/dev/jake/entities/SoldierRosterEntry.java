@@ -3,7 +3,7 @@ package dev.jake.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+
 
 /**
  * A roster entry object represents a Soldier on a unique DA6.

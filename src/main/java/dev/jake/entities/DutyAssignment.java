@@ -24,6 +24,8 @@ public class DutyAssignment {
 
     private String location;
 
+    private String description;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "soldier_id")
     private Soldier soldier;
@@ -39,41 +41,28 @@ public class DutyAssignment {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public LocalDate getDate() {
         return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
     }
 
     public DetailType getDetailType() {
         return detailType;
     }
 
-    public void setDetailType(DetailType detailType) {
-        this.detailType = detailType;
-    }
 
     public String getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
 
     public Soldier getSoldier() {
         return soldier;
     }
 
-    public void setSoldier(Soldier soldier) {
-        this.soldier = soldier;
-    }
+    public String getDescription() {return description;}
+
+
 
     @Override
     public String toString() {

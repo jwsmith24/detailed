@@ -37,6 +37,10 @@ public class DutyRoster {
     @OneToMany
     private List<SoldierRosterEntry> rosterEntries;
 
+    // tracks duties that will need to be filled
+    @OneToMany
+    private List<DutyAssignment> dutyAssignments;
+
 
 
     public DutyRoster(DetailType type) {
@@ -45,6 +49,15 @@ public class DutyRoster {
     }
 
     public DutyRoster(){}
+
+    public List<DutyAssignment> getDutyAssignments() {
+        return this.dutyAssignments;
+    }
+
+    // used to add a new duty that will need to be filled by someone on the roster
+    public void addDuty(LocalDate date) {
+        this.dutyAssignments.add(new DutyAssignment(date, this.type));
+    }
 
 
 
