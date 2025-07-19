@@ -1,0 +1,2 @@
+INSERT INTO duty_roster(ID, DESCRIPTION, TYPE)
+VALUES (99, 'CQ NCO at Building 12345', 'CQ_NCO');
