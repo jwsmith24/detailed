@@ -42,7 +42,6 @@ public class DutyRoster {
     private List<DutyAssignment> dutyAssignments;
 
 
-
     public DutyRoster(DetailType type) {
         this.type = type;
         this.rosterEntries = new ArrayList<>();
@@ -55,8 +54,8 @@ public class DutyRoster {
     }
 
     // used to add a new duty that will need to be filled by someone on the roster
-    public void addDuty(LocalDate date) {
-        this.dutyAssignments.add(new DutyAssignment(date, this.type));
+    public void addDuty(DutyAssignment newDuty) {
+        this.dutyAssignments.add(newDuty);
     }
 
 

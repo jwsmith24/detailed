@@ -6,10 +6,8 @@ import dev.jake.repos.DutyRosterRepository;
 import dev.jake.util.DetailType;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.Map;
 
 @Service
 public class DutyRosterService {
@@ -38,17 +36,19 @@ public class DutyRosterService {
 
 
 
-    public Optional<DutyRoster> addDutyToRoster(Long rosterId, LocalDate date, DetailType type) {
-        try {
-            // look up roster by id
-            Optional<DutyRoster> targetRoster = dutyRosterRepository.findById(rosterId);
-            targetRoster.get().addDuty();
+    public ResponseEntity<DutyRoster> addDutyToRoster(Long rosterId, DutyAssignment assignment) {
 
+        // check if target duty roster exists
+        Optional<DutyRoster> targetRoster = dutyRosterRepository.findById(rosterId);
+
+        if (targetRoster.isEmpty()) {
+            return ResponseEntity.notFound().build(); // 404
         }
 
-
-
-
+        // add new duty assignment to roster and return updated roster
+        DutyRoster roster = targetRoster.get();
+        roster.addDuty(assignment);
+        return ResponseEntity.ok(roster);
     }
 
 

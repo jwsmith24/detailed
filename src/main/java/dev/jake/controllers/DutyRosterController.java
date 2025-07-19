@@ -1,5 +1,6 @@
 package dev.jake.controllers;
 
+import dev.jake.entities.DutyAssignment;
 import dev.jake.entities.DutyRoster;
 import dev.jake.services.DutyRosterService;
 import dev.jake.util.DetailType;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,9 +42,9 @@ public class DutyRosterController {
     }
 
     @PostMapping("/{rosterId}")
-    public ResponseEntity<String> addNewDutyToRoster(@PathVariable Long rosterId) {
-
-
+    public ResponseEntity<DutyRoster> addNewDutyToRoster(@PathVariable Long rosterId,
+                                                     @RequestBody DutyAssignment assignment) {
+        return dutyRosterService.addDutyToRoster(rosterId, assignment);
     }
 
     @GetMapping
