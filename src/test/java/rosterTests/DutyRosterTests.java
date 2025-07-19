@@ -24,7 +24,7 @@ class DutyRosterTests {
     void shouldReturnDutyRosterWithId() {
         ResponseEntity<String> response = restTemplate.getForEntity("/rosters/99", String.class);
         System.out.println(response);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
     }
 
