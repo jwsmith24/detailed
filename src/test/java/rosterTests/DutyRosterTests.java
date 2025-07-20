@@ -51,5 +51,10 @@ class DutyRosterTests {
         assertThat(rosterIds).containsExactlyInAnyOrder(99, 100);
     }
 
+    @Test
+    void shouldAddNewDutyToRoster() {
+        // todo
+    }
+
 
 }
