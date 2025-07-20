@@ -1,99 +1,44 @@
 package dev.jake.entities;
 
-import dev.jake.util.DetailType;
 import dev.jake.util.Rank;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+@Entity
 public class Soldier {
-    private final List<DutyAssignment> upcomingDuties;
-    private final Map<DetailType, Integer> detailTracker;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String name;
+
+    @Enumerated(EnumType.STRING)
     private Rank rank;
+
     private LocalDate leaveStartDate;
     private LocalDate leaveEndDate;
     private int daysOfApprovedAbsences;
 
+    @OneToMany(mappedBy = "soldier", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<DutyAssignment> assignedDuties = new ArrayList<>();
+
+    public Soldier() {} // you're welcome jpa
 
     public Soldier(String name, Rank rank) {
         this.name = name;
         this.rank = rank;
-        this.leaveStartDate = null;
-        this.leaveEndDate = null;
-        this.upcomingDuties = new ArrayList<>();
-        this.detailTracker = new HashMap<>();
     }
 
-    @Override
-    public String toString() {
-        return String.format("%s %s", rank, name);
+    public Long getId() {
+        return id;
     }
 
-    public boolean isAvailable(LocalDate detailDate) {
-        // check Soldier's leave days
-        if ((leaveStartDate != null && !detailDate.isBefore(leaveStartDate)) &&
-                (leaveEndDate != null && !detailDate.isAfter(leaveEndDate))) {
-            return false;
-        }
-
-        // check if they're already scheduled for something else on that day and also day before or day after
-        for (DutyAssignment detail : upcomingDuties) {
-            LocalDate dateOfExistingDuty = detail.getDate();
-            if (dateOfExistingDuty.equals(detailDate) |
-                    dateOfExistingDuty.equals(detailDate.minusDays(1)) |
-                    dateOfExistingDuty.equals(detailDate.plusDays(1))) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public void addAssignment(DutyAssignment detail) {
-        upcomingDuties.add(detail);
-        detailTracker.put(detail.getDetailType(), detailTracker.getOrDefault(detail.getDetailType(), 0) + 1);
-    }
-
-    public void removeAssignment(DutyAssignment detail) {
-        upcomingDuties.remove(detail);
-
-        // update duty count
-        DetailType type = detail.getDetailType();
-        int count = detailTracker.getOrDefault(type, 0) - 1;
-
-        if (count <= 0) {
-            detailTracker.remove(type);
-        } else {
-            detailTracker.put(type, count);
-        }
-
-
-    }
-
-
-    public void setLeaveDays(LocalDate leaveStartDate, LocalDate leaveEndDate) {
-        this.leaveStartDate = leaveStartDate;
-        this.leaveEndDate = leaveEndDate;
-        this.daysOfApprovedAbsences = (int) ChronoUnit.DAYS.between(leaveStartDate, leaveEndDate);
-    }
-
-
-    public void clearLeaveDays() {
-        this.leaveStartDate = null;
-        this.leaveEndDate = null;
-    }
-
-    public int getDaysOfApprovedAbsences() {
-        return daysOfApprovedAbsences;
-    }
-
-    public void setDaysOfApprovedAbsences(int daysOfApprovedAbsences) {
-        this.daysOfApprovedAbsences = daysOfApprovedAbsences;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -112,6 +57,10 @@ public class Soldier {
         this.rank = rank;
     }
 
+    public List<DutyAssignment> getAssignedDuties() {
+        return assignedDuties;
+    }
+
     public LocalDate getLeaveStartDate() {
         return leaveStartDate;
     }
@@ -128,7 +77,17 @@ public class Soldier {
         this.leaveEndDate = leaveEndDate;
     }
 
-    public List<DutyAssignment> getUpcomingDuties() {
-        return upcomingDuties;
+    public int getDaysOfApprovedAbsences() {
+        return daysOfApprovedAbsences;
     }
+
+    public void setDaysOfApprovedAbsences(int daysOfApprovedAbsences) {
+        this.daysOfApprovedAbsences = daysOfApprovedAbsences;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s %s", rank, name);
+    }
+
 }

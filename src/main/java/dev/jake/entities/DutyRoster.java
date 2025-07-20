@@ -1,12 +1,10 @@
 package dev.jake.entities;
 
 import dev.jake.util.DetailType;
+import jakarta.persistence.*;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A detail object represents a DA Form 6 for a specific duty with the exception that it is a
@@ -19,48 +17,59 @@ import java.util.Map;
  * time pulling that specific duty.
  * </p>
  */
+
+@Entity
 public class DutyRoster {
-    private final DetailType type;
-    // tracks each soldier eligible to pull the specific duty (cq, sd, etc.)
-    private final List<SoldierRosterEntry> rosterEntries;
-    // tracks duties that need to be filled
-    private final Map<Integer, DutyAssignment> dutyAssignments;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long roster_id;
+
     private String description; // include relevant info such as location, important POCs
 
-    public DutyRoster(DetailType type) {
-        this.type = type;
+    @Enumerated(EnumType.STRING)
+    private DetailType detailType;
+
+    // tracks each soldier eligible to pull the specific duty (cq, sd, etc.)
+    @OneToMany
+    private List<SoldierRosterEntry> rosterEntries;
+
+    // tracks duties that will need to be filled
+    @OneToMany
+    private List<DutyAssignment> dutyAssignments;
+
+
+    public DutyRoster(DetailType detailType) {
+        this.detailType = detailType;
         this.rosterEntries = new ArrayList<>();
-        this.dutyAssignments = new HashMap<>();
     }
 
-    public void addDuty(LocalDate date) {
-        DutyAssignment newDuty = new DutyAssignment(date, type);
-        this.dutyAssignments.put(newDuty.getId(), newDuty);
+    public DutyRoster(){}
 
+    public List<DutyAssignment> getDutyAssignments() {
+        return this.dutyAssignments;
+    }
+
+    // used to add a new duty that will need to be filled by someone on the roster
+
+    public void addDuty(DutyAssignment newDuty) {
+        this.dutyAssignments.add(newDuty);
     }
 
 
-    public Map<Integer, DutyAssignment> getDutyAssignments() {
-        return dutyAssignments;
-    }
-
-    public DutyAssignment getDutyAssignment(int id) {
-        return dutyAssignments.get(id);
-    }
-
-    public DetailType getType() {
-        return type;
+    public Long getRoster_id() {
+        return roster_id;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public DetailType getDetailType() {
+        return detailType;
     }
 
-    public List<SoldierRosterEntry> getRoster() {
+    public List<SoldierRosterEntry> getRosterEntries() {
         return rosterEntries;
     }
 }
