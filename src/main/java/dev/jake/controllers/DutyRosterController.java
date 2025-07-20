@@ -49,22 +49,13 @@ public class DutyRosterController {
 
     @GetMapping
     public ResponseEntity<List<DutyRoster>> getAllRosters() {
-        List<DutyRoster> rosters = dutyRosterService.getAllRosters();
-        // check for empty list
-        if (rosters == null || rosters.isEmpty()) {
-            return ResponseEntity.noContent().build(); // 204: no content
-        }
 
-        return ResponseEntity.ok(rosters);
+        return dutyRosterService.getAllRosters();
     }
 
     @GetMapping("/{rosterId}")
     public ResponseEntity<DutyRoster> getRosterById(@PathVariable Long rosterId) {
-
-        Optional<DutyRoster> targetRoster = dutyRosterService.getRosterById(rosterId);
-
-        return targetRoster.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-
+        return dutyRosterService.getRosterById(rosterId);
     }
 
 }

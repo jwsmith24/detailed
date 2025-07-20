@@ -1,4 +1,4 @@
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+
 
 plugins {
     id("org.springframework.boot") version "3.2.5"
@@ -26,6 +26,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("com.jayway.jsonpath:json-path:2.9.0") // json path parsing
     testImplementation("org.springframework.security:spring-security-test")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
 }
 

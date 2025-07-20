@@ -3,11 +3,8 @@ package dev.jake.entities;
 import dev.jake.util.DetailType;
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A detail object represents a DA Form 6 for a specific duty with the exception that it is a
@@ -26,12 +23,12 @@ public class DutyRoster {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long roster_id;
 
     private String description; // include relevant info such as location, important POCs
 
     @Enumerated(EnumType.STRING)
-    private DetailType type;
+    private DetailType detailType;
 
     // tracks each soldier eligible to pull the specific duty (cq, sd, etc.)
     @OneToMany
@@ -42,8 +39,8 @@ public class DutyRoster {
     private List<DutyAssignment> dutyAssignments;
 
 
-    public DutyRoster(DetailType type) {
-        this.type = type;
+    public DutyRoster(DetailType detailType) {
+        this.detailType = detailType;
         this.rosterEntries = new ArrayList<>();
     }
 
@@ -54,10 +51,25 @@ public class DutyRoster {
     }
 
     // used to add a new duty that will need to be filled by someone on the roster
+
     public void addDuty(DutyAssignment newDuty) {
         this.dutyAssignments.add(newDuty);
     }
 
 
+    public Long getRoster_id() {
+        return roster_id;
+    }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public DetailType getDetailType() {
+        return detailType;
+    }
+
+    public List<SoldierRosterEntry> getRosterEntries() {
+        return rosterEntries;
+    }
 }

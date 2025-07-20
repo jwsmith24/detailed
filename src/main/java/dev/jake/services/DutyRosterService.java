@@ -25,16 +25,25 @@ public class DutyRosterService {
         dutyRosterRepository.save(newRoster);
     }
 
-    public List<DutyRoster> getAllRosters() {
-        return dutyRosterRepository.findAll();
+    public ResponseEntity<List<DutyRoster>> getAllRosters() {
+        List<DutyRoster> dutyRosters = dutyRosterRepository.findAll();
+        // check for empty list
+        if (dutyRosters.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(dutyRosters);
     }
 
-    public Optional<DutyRoster> getRosterById(Long id) {
-        return dutyRosterRepository.findById(id);
+
+
+    public ResponseEntity<DutyRoster> getRosterById(Long id) {
+
+        Optional<DutyRoster> roster = dutyRosterRepository.findById(id);
+
+        return roster.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 
     }
-
-
 
     public ResponseEntity<DutyRoster> addDutyToRoster(Long rosterId, DutyAssignment assignment) {
 
